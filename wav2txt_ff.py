@@ -24,7 +24,7 @@ elif os.path.isfile(sys.argv[1]):
 
 for wc, wf in enumerate(wav_files):
   ln = Select(ff.find_element('id','langselect'))
-  ln.select_by_value('sl-SI')
+  ln.select_by_visible_text(lang)
   s = ff.find_element('xpath', "//input[@type='file']")
   s.send_keys(wf)
   txt = ''

@@ -8,6 +8,17 @@ from selenium.webdriver.common.keys import Keys
 
 # Iz https://chromedriver.chromium.org/downloads prenesi ustrezen 
 # gonilnik in ga razširi v direktorij v katerem se nahaja python.exe.
+import ipdb; ipdb.set_trace()
+if len(sys.argv) > 2:
+  lang = sys.argv[2]
+else:
+  lang = 'Slovenian (Slovenia)'
+
+if os.path.isdir(sys.argv[1]):  
+  wav_dir = os.path.abspath(sys.argv[1])
+  wav_files = sorted(glob(os.path.join(wav_dir, "*.wav")))
+elif os.path.isfile(sys.argv[1]):  
+  wav_files = [os.path.abspath(sys.argv[1])]
 
 options = webdriver.ChromeOptions()
 options.add_argument('--headless')
@@ -16,15 +27,9 @@ ch = webdriver.Chrome(options=options)
 ch.get('https://azure.microsoft.com/en-us/services/cognitive-services/speech-to-text/#features')
 ln = Select(ch.find_element('id','langselect'))
 
-if os.path.isdir(sys.argv[1]):  
-  wav_dir = os.path.abspath(sys.argv[1])
-  wav_files = sorted(glob(os.path.join(wav_dir, "*.wav")))
-elif os.path.isfile(sys.argv[1]):  
-  wav_files = [os.path.abspath(sys.argv[1])]
-
 for wc, wf in enumerate(wav_files):
   ln = Select(ch.find_element('id','langselect'))
-  ln.select_by_value('sl-SI')
+  ln.select_by_visible_text(lang)
   s = ch.find_element('xpath', "//input[@type='file']")
   s.send_keys(wf)
   txt = ''
