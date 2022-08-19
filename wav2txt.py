@@ -1,3 +1,4 @@
+print('procesiranje ...')
 import os, sys
 from glob import glob
 import time
@@ -8,7 +9,7 @@ from selenium.webdriver.common.keys import Keys
 
 # Iz https://chromedriver.chromium.org/downloads prenesi ustrezen 
 # gonilnik in ga razširi v direktorij v katerem se nahaja python.exe.
-import ipdb; ipdb.set_trace()
+
 if len(sys.argv) > 2:
   lang = sys.argv[2]
 else:
