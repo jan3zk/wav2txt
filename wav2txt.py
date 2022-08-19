@@ -42,5 +42,9 @@ for wc, wf in enumerate(wav_files):
     retries += 1
   ch.refresh()
   txt = txt.split('\n',2)[-1].split('---',1)[0].rstrip()
+  
   print('%s (%i/%i):'%(os.path.basename(wf), wc+1, len(wav_files)))
   print(txt)
+  with open(os.path.splitext(wf)[0]+'.txt', 'w') as text_file:
+    text_file.write(txt)
+  
