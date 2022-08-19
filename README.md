@@ -16,7 +16,7 @@ Prednastavljen jezik je Slovenščina. Izbiro jezika lahko nastavimo z dodatnim 
 
 ```python wav2txt.py pot/do/datoteke.wav "English (United Kingdom)"```
 
-###Opcijsko
+### Opcijsko
 
 Uporaba [izvršljive datoteke](https://unilj-my.sharepoint.com/:u:/g/personal/janezkrfe_fe1_uni-lj_si/EZN2fcSiW-JAueoIyGGIA2wBDRHj8u4RQsacJgxNlIpwiQ?e=YAsa5y) v okolju Windows:
 
