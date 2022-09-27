@@ -10,6 +10,11 @@ from selenium.webdriver.common.keys import Keys
 # Iz https://github.com/mozilla/geckodriver/releases/ prenesi ustrezen 
 # gonilnik in ga razširi v direktorij v katerem se nahaja python.exe.
 
+if len(sys.argv) > 2:
+  lang = sys.argv[2]
+else:
+  lang = 'Slovenian (Slovenia)'
+
 options = Options()
 options.headless = True
 ff = webdriver.Firefox(options=options)

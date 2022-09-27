@@ -6,9 +6,8 @@ import random
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
-
-# Iz https://chromedriver.chromium.org/downloads prenesi ustrezen 
-# gonilnik in ga razširi v direktorij v katerem se nahaja python.exe.
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 
 if len(sys.argv) > 2:
   lang = sys.argv[2]
@@ -24,7 +23,7 @@ elif os.path.isfile(sys.argv[1]):
 options = webdriver.ChromeOptions()
 options.add_argument('--headless')
 options.add_experimental_option('excludeSwitches', ['enable-logging'])
-ch = webdriver.Chrome(options=options)
+ch = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 ch.get('https://azure.microsoft.com/en-us/services/cognitive-services/speech-to-text/#features')
 ln = Select(ch.find_element('id','langselect'))
 
