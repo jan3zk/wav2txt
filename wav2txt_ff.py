@@ -5,7 +5,6 @@ import random
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.common.keys import Keys
 
 # Iz https://github.com/mozilla/geckodriver/releases/ prenesi ustrezen 
 # gonilnik in ga razširi v direktorij v katerem se nahaja python.exe.
