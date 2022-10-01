@@ -1,4 +1,4 @@
-import os, sys
+import os
 import time
 import random
 import uuid
@@ -6,7 +6,7 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.firefox.options import Options
 from flask import Flask, request
-from werkzeug.utils import secure_filename
+
 
 # Iz https://github.com/mozilla/geckodriver/releases/ prenesi ustrezen 
 # gonilnik in ga razširi v direktorij v katerem se nahaja python.exe.
@@ -44,13 +44,10 @@ def recognise():
   if f.filename != '':
     tmp_file = str(uuid.uuid4())+'.wav'
     f.save(tmp_file)
-    #filename = secure_filename(f.filename)
-    #import ipdb; ipdb.set_trace()
     txt_str = wav2txt(tmp_file)
     os.remove(tmp_file) 
     return txt_str
-    
 
 
 if __name__ == '__main__':
-  app.run(port=5000,debug=True)
+  app.run(port=5000, debug=True)

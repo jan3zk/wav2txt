@@ -18,11 +18,11 @@ Prednastavljen jezik je Slovenščina. Izbiro jezika lahko nastavimo z dodatnim 
 
 ### Strežniška aplikacija
 
-Zagon aplikacije s
+Zagon aplikacije:
 
 ```python app.py```
 
-Klic aplikacije z
+Klic aplikacije:
 
 ```curl -X POST -F file=@datoteka.wav http://localhost:5000/recognise```
 
