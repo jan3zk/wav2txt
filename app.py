@@ -8,9 +8,6 @@ from selenium.webdriver.firefox.options import Options
 from flask import Flask, request
 
 
-# Iz https://github.com/mozilla/geckodriver/releases/ prenesi ustrezen 
-# gonilnik in ga razširi v direktorij v katerem se nahaja python.exe.
-
 def wav2txt(wav, lang='Slovenian (Slovenia)'):
   options = Options()
   options.headless = True
