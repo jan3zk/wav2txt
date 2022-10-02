@@ -9,12 +9,15 @@ from selenium.webdriver.firefox.options import Options
 import werkzeug
 from flask import Flask
 from flask_restful import Resource, Api, reqparse
+from selenium.webdriver.firefox.service import Service as FirefoxService
+from webdriver_manager.firefox import GeckoDriverManager
 
+driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()))
 
 def wav2txt(wav, lang='Slovenian (Slovenia)'):
   options = Options()
   options.headless = True
-  ff = webdriver.Firefox(options=options)
+  ff = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=options)
   ff.get('https://azure.microsoft.com/en-us/services/cognitive-services/speech-to-text/#features')
   ln = Select(ff.find_element('id','langselect'))
   ln = Select(ff.find_element('id','langselect'))
