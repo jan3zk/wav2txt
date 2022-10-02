@@ -10,14 +10,14 @@ import werkzeug
 from flask import Flask
 from flask_restful import Resource, Api, reqparse
 from selenium.webdriver.firefox.service import Service as FirefoxService
-from webdriver_manager.firefox import GeckoDriverManager
 
-driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()))
+# Iz https://github.com/mozilla/geckodriver/releases/ prenesi ustrezen 
+# gonilnik in ga razširi v direktorij v katerem se nahaja python.exe.
 
 def wav2txt(wav, lang='Slovenian (Slovenia)'):
   options = Options()
   options.headless = True
-  ff = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=options)
+  ff = webdriver.Firefox(options=options)
   ff.get('https://azure.microsoft.com/en-us/services/cognitive-services/speech-to-text/#features')
   ln = Select(ff.find_element('id','langselect'))
   ln = Select(ff.find_element('id','langselect'))
