@@ -6,15 +6,15 @@ Razpoznavalnik govora iz zvočnih datotek WAV z uporabo Microsoftove spletne sto
 
 Zagon na posamezni zvočni datoteki WAV:
 
-```python wav2txt.py pot/do/datoteke.wav```
+```python wav2txt.py -w pot/do/datoteke.wav```
 
 Zagon na vseh datotekah WAV znotraj mape:
 
-```python wav2txt.py pot/do/mape/```
+```python wav2txt.py -w pot/do/mape/```
 
-Prednastavljen jezik je Slovenščina. Izbiro jezika lahko nastavimo z dodatnim vhodnim argumentom, npr. izbiro angleščine dosežemo z:
+Z opcijskimi argumenti lahko izberemo željen jezik, spletni brskalnik in punktuator, npr.:
 
-```python wav2txt.py pot/do/datoteke.wav "English (United Kingdom)"```
+```python -w wav2txt.py pot/do/datoteke.wav -l "English (United Kingdom)" -b Firefox -p```
 
 ### Strežniška aplikacija
 

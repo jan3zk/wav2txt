@@ -14,14 +14,19 @@ from selenium.webdriver.firefox.service import Service as FirefoxService
 # Iz https://github.com/mozilla/geckodriver/releases/ prenesi ustrezen 
 # gonilnik in ga razširi v direktorij v katerem se nahaja python.exe.
 
-def wav2txt(wav, lang='Slovenian (Slovenia)'):
+def str2bool(v):
+  return v.lower() in ("yes", "true", "t", "1")
+
+def wav2txt(wav, lang='Slovenian (Slovenia)', punct=False):
   options = Options()
   options.headless = True
   ff = webdriver.Firefox(options=options)
   ff.get('https://azure.microsoft.com/en-us/services/cognitive-services/speech-to-text/#features')
   ln = Select(ff.find_element('id','langselect'))
-  ln = Select(ff.find_element('id','langselect'))
   ln.select_by_visible_text(lang)
+  pn = ff.find_element('id','punctuation')
+  if punct != str2bool(pn.get_attribute('checked')):
+    pn.click()
   s = ff.find_element('xpath', "//input[@type='file']")
   s.send_keys(os.path.abspath(wav))
   txt = ''
@@ -43,10 +48,10 @@ api.app.config['RESTFUL_JSON'] = {
 
 parser = reqparse.RequestParser()
 parser.add_argument(
-                    'file',
-                    type=werkzeug.datastructures.FileStorage,
-                    location='files'
-                    )
+  'file',
+  type=werkzeug.datastructures.FileStorage,
+  location='files'
+)
 
 class About(Resource):
   def get(self):
