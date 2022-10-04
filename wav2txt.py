@@ -22,26 +22,34 @@ def argparser():
     default='Slovenian (Slovenia)',
     help='Language selection.'
   )
-  ap.add_argument('-p',
-    action='store_true',
-    help='Punctuation switch.'
-  )
   ap.add_argument('-b',
     type=str,
     default='Firefox',
     help='Browser selection.'
+  )
+  ap.add_argument('-p',
+    action='store_true',
+    help='Punctuation switch.'
+  )
+  ap.add_argument('-s',
+    action='store_true',
+    help='Storage switch.'
   )
   return ap.parse_args()
 
 def str2bool(v):
   return v.lower() in ("yes", "true", "t", "1")
 
-def wav2txt(wav, lang, punct, browser):
-  if os.path.isdir(args.w):  
-    wav_dir = os.path.abspath(args.w)
+def wav2txt(wav,
+            lang='Slovenian (Slovenia)',
+            browser='Firefox',
+            punct=True,
+            save=False):
+  if os.path.isdir(wav):  
+    wav_dir = os.path.abspath(wav)
     wav_files = sorted(glob(os.path.join(wav_dir, "*.wav")))
-  elif os.path.isfile(args.w):  
-    wav_files = [os.path.abspath(args.w)]
+  elif os.path.isfile(wav):  
+    wav_files = [os.path.abspath(wav)]
 
   if browser.lower() == 'chrome':
     opts = webdriver.ChromeOptions()
@@ -62,9 +70,9 @@ def wav2txt(wav, lang, punct, browser):
 
   for wc, wf in enumerate(wav_files):
     ln = Select(br.find_element('id','langselect'))
-    ln.select_by_visible_text(args.l)
+    ln.select_by_visible_text(lang)
     pn = br.find_element('id','punctuation')
-    if args.p != str2bool(pn.get_attribute('checked')):
+    if punct != str2bool(pn.get_attribute('checked')):
       pn.click()
     s = br.find_element('xpath', "//input[@type='file']")
     s.send_keys(wf)
@@ -79,11 +87,13 @@ def wav2txt(wav, lang, punct, browser):
     txt = txt.split('\n',2)[-1].split('---',1)[0].rstrip()
 
     print('%s : %s'%(os.path.basename(wf), txt))
-
-    with open(os.path.splitext(wf)[0]+'.txt', 'w') as text_file:
-      text_file.write(txt)
+    if save:
+      with open(os.path.splitext(wf)[0]+'.txt', 'w') as text_file:
+        text_file.write(txt)
+    if os.path.isfile(wav):
+      return txt
 
 
 if __name__ == '__main__':
   args = argparser()
-  wav2txt(args.w, args.l, args.p, args.b)
+  wav2txt(args.w, args.l, args.b, args.p, args.s)
