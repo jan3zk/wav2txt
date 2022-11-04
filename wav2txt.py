@@ -1,13 +1,13 @@
 print('procesiranje ...')
-import os, sys
+import os
 from glob import glob
 import time
 import random
-from selenium import webdriver
+#from selenium import webdriver
 from selenium.webdriver.support.ui import Select
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.firefox.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
+#from selenium.webdriver.chrome.service import Service
+#from selenium.webdriver.firefox.options import Options
+#from webdriver_manager.chrome import ChromeDriverManager
 import argparse
 
 def argparser():
@@ -22,11 +22,6 @@ def argparser():
     default='Slovenian (Slovenia)',
     help='Language selection.'
   )
-  ap.add_argument('-b',
-    type=str,
-    default='Firefox',
-    help='Browser selection.'
-  )
   ap.add_argument('-p',
     action='store_true',
     help='Punctuation switch.'
@@ -40,9 +35,8 @@ def argparser():
 def str2bool(v):
   return v.lower() in ("yes", "true", "t", "1")
 
-def wav2txt(wav,
+def wav2txt(wav,br,
             lang='Slovenian (Slovenia)',
-            browser='Firefox',
             punct=True,
             save=False):
   if os.path.isdir(wav):  
@@ -50,23 +44,6 @@ def wav2txt(wav,
     wav_files = sorted(glob(os.path.join(wav_dir, "*.wav")))
   elif os.path.isfile(wav):  
     wav_files = [os.path.abspath(wav)]
-
-  if browser.lower() == 'chrome':
-    opts = webdriver.ChromeOptions()
-    opts.add_argument('--headless')
-    opts.add_experimental_option('excludeSwitches', ['enable-logging'])
-    br = webdriver.Chrome(
-      service=Service(ChromeDriverManager().install()),
-      options=opts)
-  elif browser.lower() == 'firefox':
-    # Iz https://github.com/mozilla/geckodriver/releases/ prenesi ustrezen 
-    # gonilnik in ga razširi v direktorij v katerem se nahaja python.exe.
-    opts = Options()
-    opts.headless = True
-    br = webdriver.Firefox(options=opts)
-
-  br.get('https://azure.microsoft.com/en-us/services/cognitive-services/'\
-    'speech-to-text/#features')
 
   for wc, wf in enumerate(wav_files):
     ln = Select(br.find_element('id','langselect'))
