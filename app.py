@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import os
 import uuid
 from selenium import webdriver
@@ -7,10 +6,13 @@ from flask import Flask
 from flask_restful import Resource, Api, reqparse
 from selenium.webdriver.firefox.options import Options
 from wav2txt import wav2txt
+import librosa
 #from selenium.webdriver.support.ui import Select
 #from selenium.webdriver.chrome.service import Service
 #from webdriver_manager.chrome import ChromeDriverManager
 #from selenium.webdriver.firefox.service import Service as FirefoxService
+
+MAX_WAV_LENGTH = 15
 
 def str2bool(v):
   return v.lower() in ("yes", "true", "t", "1")
@@ -23,7 +25,7 @@ api.app.config['RESTFUL_JSON'] = {
 
 parser = reqparse.RequestParser()
 parser.add_argument(
-  'file',
+  'audio_file',
   type=werkzeug.datastructures.FileStorage,
   location='files'
 )
@@ -35,25 +37,32 @@ class About(Resource):
 class Recognise(Resource):
   def post(self):
     data = parser.parse_args()
-    if data['file'] == "":
+    if data['audio_file'] == "":
       return {
-            'data':'',
+            'result':'',
             'message':'No file found',
             'status':'error'
               }
-    wavfile = data['file']
+    wavfile = data['audio_file']
     if wavfile:
       tmp_name = str(uuid.uuid4())+'.wav'
       wavfile.save(tmp_name)
-      txt_str = wav2txt(tmp_name, br)
-      os.remove(tmp_name) 
-      return {
-              'data':txt_str,
-              'message':'speech recognised',
-              'status':'success'
-              }
+      if librosa.get_duration(filename=tmp_name) > MAX_WAV_LENGTH:
+        return {
+          'result':'',
+          'message':'File length should be less than %d seconds'%MAX_WAV_LENGTH,
+          'status':'error'
+        }
+      else:
+        txt_str = wav2txt(tmp_name, br)
+        os.remove(tmp_name)
+        return {
+                'result':txt_str,
+                'message':'speech recognised',
+                'status':'success'
+                }
     return {
-            'data':'',
+            'result':'',
             'message':'Something when wrong',
             'status':'error'
             }
@@ -71,8 +80,8 @@ if __name__ == '__main__':
   #  service=Service(ChromeDriverManager().install()),
   #  options=opts)
   # Firefox Broser
-  # Iz https://github.com/mozilla/geckodriver/releases/ prenesi ustrezen 
-  # gonilnik in ga razširi v direktorij v katerem se nahaja python.exe.
+  # Iz https://github.com/mozilla/geckodriver/releases/ prenesi ustrezen
+  # gonilnik in ga razsiri v direktorij v katerem se nahaja python.exe.
   opts = Options()
   opts.headless = True
   br = webdriver.Firefox(options=opts)

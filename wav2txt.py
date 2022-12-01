@@ -10,6 +10,7 @@ from selenium.webdriver.support.ui import Select
 #from webdriver_manager.chrome import ChromeDriverManager
 import argparse
 
+
 def argparser():
   ap = argparse.ArgumentParser()
   ap.add_argument('-w',
