@@ -6,13 +6,14 @@ from flask import Flask
 from flask_restful import Resource, Api, reqparse
 from selenium.webdriver.firefox.options import Options
 from wav2txt import wav2txt
-import librosa
+#import librosa
+import soundfile as sf
 #from selenium.webdriver.support.ui import Select
 #from selenium.webdriver.chrome.service import Service
 #from webdriver_manager.chrome import ChromeDriverManager
 #from selenium.webdriver.firefox.service import Service as FirefoxService
 
-MAX_WAV_LENGTH = 15
+MAX_WAV_LENGTH = 2
 
 def str2bool(v):
   return v.lower() in ("yes", "true", "t", "1")
@@ -41,31 +42,29 @@ class Recognise(Resource):
       return {
             'result':'',
             'message':'No file found',
-            'status':'error'
-              }
+            'status':'error'}
     wavfile = data['audio_file']
     if wavfile:
       tmp_name = str(uuid.uuid4())+'.wav'
       wavfile.save(tmp_name)
-      if librosa.get_duration(filename=tmp_name) > MAX_WAV_LENGTH:
+      wavfile = sf.SoundFile(tmp_name)
+      #if librosa.get_duration(filename=tmp_name) > MAX_WAV_LENGTH:
+      if (wavfile.frames/wavfile.samplerate) > MAX_WAV_LENGTH:
         return {
           'result':'',
           'message':'File length should be less than %d seconds'%MAX_WAV_LENGTH,
-          'status':'error'
-        }
+          'status':'error'}
       else:
         txt_str = wav2txt(tmp_name, br)
         os.remove(tmp_name)
         return {
-                'result':txt_str,
-                'message':'speech recognised',
-                'status':'success'
-                }
+          'result':txt_str,
+          'message':'speech recognised',
+          'status':'success'}
     return {
-            'result':'',
-            'message':'Something when wrong',
-            'status':'error'
-            }
+      'result':'',
+      'message':'Something when wrong',
+      'status':'error'}
 
 api.add_resource(About, '/')
 api.add_resource(Recognise,'/recognise')
