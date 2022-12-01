@@ -53,7 +53,7 @@ class Recognise(Resource):
         return {
           'result':'',
           'message':'File should be less than %d seconds long.'%MAX_WAV_LENGTH,
-          'status':'error'}
+          'status':'413 Payload Too Large'}
       else:
         txt_str = wav2txt(tmp_name, br)
         os.remove(tmp_name)
