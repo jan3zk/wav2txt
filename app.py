@@ -13,7 +13,7 @@ import soundfile as sf
 #from webdriver_manager.chrome import ChromeDriverManager
 #from selenium.webdriver.firefox.service import Service as FirefoxService
 
-MAX_WAV_LENGTH = 2
+MAX_WAV_LENGTH = 15
 
 def str2bool(v):
   return v.lower() in ("yes", "true", "t", "1")
