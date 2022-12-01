@@ -41,7 +41,7 @@ class Recognise(Resource):
     if data['audio_file'] == "":
       return {
             'result':'',
-            'message':'No file found',
+            'message':'No file found.',
             'status':'error'}
     wavfile = data['audio_file']
     if wavfile:
@@ -52,18 +52,18 @@ class Recognise(Resource):
       if (wavfile.frames/wavfile.samplerate) > MAX_WAV_LENGTH:
         return {
           'result':'',
-          'message':'File length should be less than %d seconds'%MAX_WAV_LENGTH,
+          'message':'File should be less than %d seconds long.'%MAX_WAV_LENGTH,
           'status':'error'}
       else:
         txt_str = wav2txt(tmp_name, br)
         os.remove(tmp_name)
         return {
           'result':txt_str,
-          'message':'speech recognised',
+          'message':'Speech recognised.',
           'status':'success'}
     return {
       'result':'',
-      'message':'Something when wrong',
+      'message':'Something when wrong.',
       'status':'error'}
 
 api.add_resource(About, '/')
