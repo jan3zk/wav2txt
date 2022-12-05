@@ -21,6 +21,7 @@ Z opcijskimi argumenti lahko izberemo željen jezik, spletni brskalnik in punktu
 Zagon aplikacije:
 
 ```python3 app.py```
+
 ```python3 app.py > app.log 2>&1```
 
 
@@ -28,4 +29,6 @@ Klic aplikacije:
 
 ```curl -X POST -F audio_file=@datoteka.wav http://localhost:5000/recognise```
 
+Prednastavljena je izbira Microsoftovega razpoznavalnika, opcijsko lahko z dodatnim argumentom izberemo FRI-jev razpoznavalnik:
 
+```curl -X POST -F audio_file=@datoteka.wav http://localhost:5000/recognise -F engine=fri```
