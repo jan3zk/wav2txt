@@ -29,6 +29,6 @@ Klic aplikacije:
 
 ```curl -X POST -F audio_file=@datoteka.wav http://localhost:5000/recognise```
 
-Prednastavljena je izbira Microsoftovega razpoznavalnika, opcijsko lahko z dodatnim argumentom izberemo FRI-jev razpoznavalnik:
+Prednastavljena je izbira FRI-jevega razpoznavalnika, opcijsko lahko z dodatnim argumentom izberemo Microsoftov razpoznavalnik:
 
-```curl -X POST -F audio_file=@datoteka.wav http://localhost:5000/recognise -F engine=fri```
+```curl -X POST -F audio_file=@datoteka.wav http://localhost:5000/recognise -F engine=ms```

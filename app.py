@@ -57,15 +57,15 @@ class Recognise(Resource):
           'message':'File should be less than %d seconds long.'%MAX_WAV_LENGTH,
           'status':'413 Payload Too Large'}, 413
       else:
-        if data['engine'] == None or data['engine'] == 'ms':
-          txt_str = wav2txt(tmp_name, br)
-        elif data['engine'] == 'fri':
+        if data['engine'] == None or data['engine'] == 'fri':
           txt_str = subprocess.run(
             ['curl', '-X', 'POST', '-F', 'audio_file=@%s'%tmp_name,
             'http://translator.data-lab.si:8000/api/transcribe'], stdout=subprocess.PIPE)
           txt_str = txt_str.stdout.decode('utf-8')
           txt_str = json.loads(txt_str)
           txt_str = txt_str.get('result')
+        elif data['engine'] == 'ms':
+          txt_str = wav2txt(tmp_name, br)
         else:
           return {
           'result':'',
