@@ -2,21 +2,19 @@ import os
 import uuid
 from selenium import webdriver
 import werkzeug
-from flask import Flask
+from flask import Flask, Response
 from flask_restful import Resource, Api, reqparse
 from selenium.webdriver.firefox.options import Options
 from wav2txt import wav2txt
-#import librosa
 import soundfile as sf
+import json
+import subprocess
 #from selenium.webdriver.support.ui import Select
 #from selenium.webdriver.chrome.service import Service
 #from webdriver_manager.chrome import ChromeDriverManager
 #from selenium.webdriver.firefox.service import Service as FirefoxService
 
 MAX_WAV_LENGTH = 15
-
-def str2bool(v):
-  return v.lower() in ("yes", "true", "t", "1")
 
 app = Flask(__name__)
 api = Api(app)
@@ -30,6 +28,11 @@ parser.add_argument(
   type=werkzeug.datastructures.FileStorage,
   location='files'
 )
+parser.add_argument(
+  'engine',
+  type=str,
+  location='form'
+)
 
 class About(Resource):
   def get(self):
@@ -42,20 +45,32 @@ class Recognise(Resource):
       return {
             'result':'',
             'message':'No file found.',
-            'status':'error'}
+            'status':'404 Not found'}, 404
     wavfile = data['audio_file']
     if wavfile:
       tmp_name = str(uuid.uuid4())+'.wav'
       wavfile.save(tmp_name)
       wavfile = sf.SoundFile(tmp_name)
-      #if librosa.get_duration(filename=tmp_name) > MAX_WAV_LENGTH:
       if (wavfile.frames/wavfile.samplerate) > MAX_WAV_LENGTH:
         return {
           'result':'',
           'message':'File should be less than %d seconds long.'%MAX_WAV_LENGTH,
-          'status':'413 Payload Too Large'}
+          'status':'413 Payload Too Large'}, 413
       else:
-        txt_str = wav2txt(tmp_name, br)
+        if data['engine'] == None or data['engine'] == 'ms':
+          txt_str = wav2txt(tmp_name, br)
+        elif data['engine'] == 'fri':
+          txt_str = subprocess.run(
+            ['curl', '-X', 'POST', '-F', 'audio_file=@%s'%tmp_name,
+            'http://translator.data-lab.si:8000/api/transcribe'], stdout=subprocess.PIPE)
+          txt_str = txt_str.stdout.decode('utf-8')
+          txt_str = json.loads(txt_str)
+          txt_str = txt_str.get('result')
+        else:
+          return {
+          'result':'',
+          'message':'Unsupported recognition engine %s.'%data['engine'],
+          'status':'400 Bad request'}, 400
         os.remove(tmp_name)
         return {
           'result':txt_str,
@@ -64,7 +79,7 @@ class Recognise(Resource):
     return {
       'result':'',
       'message':'Something when wrong.',
-      'status':'error'}
+      'status':'500 Internal server error'}, 500
 
 api.add_resource(About, '/')
 api.add_resource(Recognise,'/recognise')
