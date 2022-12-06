@@ -60,7 +60,7 @@ class Recognise(Resource):
         if data['engine'] == None or data['engine'] == 'fri':
           txt_str = subprocess.run(
             ['curl', '-X', 'POST', '-F', 'audio_file=@%s'%tmp_name,
-            'http://translator.data-lab.si:8000/api/transcribe'], stdout=subprocess.PIPE)
+            'http://translator.data-lab.si:8000/api/transcribe'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
           txt_str = txt_str.stdout.decode('utf-8')
           txt_str = json.loads(txt_str)
           txt_str = txt_str.get('result')
